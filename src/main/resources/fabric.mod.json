@@ -6,7 +6,8 @@
   "description": "Utility add-on for Meteor Client to help you crash servers.",
   "authors": [
     "Wide_Cat",
-    "Cloudburst"
+    "Cloudburst",
+    "Me"
   ],
   "contact": {
     "repo": "https://github.com/AntiCope/meteor-crash-addon"
@@ -26,7 +27,7 @@
     "github:sha": "@gh_hash@"
   },
   "depends": {
-    "java": ">=17",
+    "java": ">=21",
     "minecraft": ">=@mc_version@",
     "meteor-client": "*"
   }

